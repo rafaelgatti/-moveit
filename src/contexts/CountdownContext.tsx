@@ -16,6 +16,8 @@ interface ChallengesProviderProps {
 
 export const CountdownContext = createContext({} as CountdownContextData);
 
+let countdownTimeout: NodeJS.Timeout;
+
 export function CountdownProvider ({ children }: ChallengesProviderProps) {
   const { startNewChallenge } = useContext(ChallengesContext);
 
@@ -31,23 +33,15 @@ export function CountdownProvider ({ children }: ChallengesProviderProps) {
   }
 
   function resetCountdown() {
-    //clearTimeout(countdownTimeout);
+    clearTimeout(countdownTimeout);
     setIsActive(false);
     setHasFinished(false);
     setTime(25 * 60);
   }
 
-  // useEffect(() => {
-  //   if (isActive && time > 0) {
-  //     countdownTimeout = setTimeout(() => {
-  //       setTime(time - 1);
-  //     }, 1000);
-  //   }
-  // }, [isActive, time]);
-
   useEffect(() => {
     if (isActive && time > 0) {
-      setTimeout(() => {
+      countdownTimeout = setTimeout(() => {
         setTime(time - 1);
       }, 1000);
     } else if (isActive && time == 0) {
